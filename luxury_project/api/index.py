@@ -6,16 +6,16 @@ from pathlib import Path
 current_path = Path(__file__).resolve()
 base_dir = None
 
-# Look upwards until we find 'manage.py' or 'config'
+# Look upwards until we find 'manage.py'
 for parent in current_path.parents:
-    if (parent / 'manage.py').exists() or (parent / 'config').exists():
+    if (parent / 'manage.py').exists():
         base_dir = parent
         break
 
 if base_dir:
     sys.path.append(str(base_dir))
-    # Add the specific config path as a backup
-    sys.path.append(os.path.join(str(base_dir), "config"))
+    # This ensures apps like 'users' and 'vehicles' are found
+    os.chdir(str(base_dir)) 
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
