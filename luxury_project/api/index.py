@@ -2,15 +2,20 @@ import os
 import sys
 from pathlib import Path
 
-# This adds the folder containing 'config' to the path
-# If your structure is: luxury_project/api/index.py
-# Then Path(__file__).resolve().parent.parent is 'luxury_project'
-BASE_DIR = Path(__file__).resolve().parent.parent
-sys.path.append(str(BASE_DIR))
+# Absolute search for the project root
+current_path = Path(__file__).resolve()
+base_dir = None
 
-# Fallback: manually check if we need to go deeper
-if not os.path.exists(os.path.join(str(BASE_DIR), "config")):
-    sys.path.append(os.path.join(str(BASE_DIR), "luxury_project"))
+# Look upwards until we find 'manage.py' or 'config'
+for parent in current_path.parents:
+    if (parent / 'manage.py').exists() or (parent / 'config').exists():
+        base_dir = parent
+        break
+
+if base_dir:
+    sys.path.append(str(base_dir))
+    # Add the specific config path as a backup
+    sys.path.append(os.path.join(str(base_dir), "config"))
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
