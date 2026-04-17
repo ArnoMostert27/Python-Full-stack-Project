@@ -5,14 +5,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from users.views import create_admin_emergency  # Added this import
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-    # --- EMERGENCY ADMIN TRIGGER ---
-    # Visit this URL once in your browser after pushing to Vercel
-    path('make-me-admin-123/', create_admin_emergency),
+    # We removed the 'make-me-admin-123' path because 
+    # the new index.py handles user creation automatically.
     
     path('', include('users.urls')),
     path('vehicles/', include('vehicles.urls')),
