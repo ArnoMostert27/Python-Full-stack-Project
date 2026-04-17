@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.middleware.csrf import rotate_token
+from django.http import HttpResponse
 from .forms import RegisterForm
 from vehicles.models import Vehicle
 
@@ -34,9 +35,25 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     
-    # Pass the form to the template
     return render(request, 'users/login.html', {'form': form})
 
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+# --- EMERGENCY LOGIN FIX ---
+def create_admin_emergency(request):
+    User = get_user_model()
+    username = 'sauce'
+    password = '50361Pay'
+    
+    # This creates the user 'sauce' in your Neon database
+    user, created = User.objects.get_or_create(username=username)
+    user.set_password(password)
+    user.is_superuser = True
+    user.is_staff = True
+    user.save()
+    
+    if created:
+        return HttpResponse(f"✅ Created superuser: {username}")
+    return HttpResponse(f"🔄 Reset password for: {username}")
