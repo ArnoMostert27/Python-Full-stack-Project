@@ -1,12 +1,14 @@
 from pathlib import Path
 import os
-import dj_database_url  # Essential for linking external databases
+import dj_database_url 
 
 # Points to 'luxury_project' folder
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-==_em-t0dqb(^v11tj=dsca&veod%3umkku5wrdu(x)^wbk_x-'
-DEBUG = True
+# Pulling sensitive info from Environment Variables (set in Vercel Dashboard)
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-==_em-t0dqb(^v11tj=dsca&veod%3umkku5wrdu(x)^wbk_x-')
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
+
 ALLOWED_HOSTS = ["*"] 
 
 INSTALLED_APPS = [
@@ -20,6 +22,11 @@ INSTALLED_APPS = [
     'users',
     'rest_framework',
 ]
+
+# Superuser configuration for Vercel auto-creation
+DJANGO_SUPERUSER_USERNAME = os.environ.get('DJANGO_SUPERUSER_USERNAME')
+DJANGO_SUPERUSER_PASSWORD = os.environ.get('DJANGO_SUPERUSER_PASSWORD')
+DJANGO_SUPERUSER_EMAIL = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@example.com')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -52,8 +59,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # DATABASE CONFIGURATION
-# This uses dj_database_url to pull the connection string from Vercel's Environment Variables.
-# If no variable is found, it falls back to your local db.sqlite3.
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
