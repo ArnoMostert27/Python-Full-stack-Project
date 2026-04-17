@@ -1,30 +1,31 @@
 import os
 import sys
 from pathlib import Path
-from django.core.management import call_command # Add this import
+from django.core.management import call_command
 
-# Absolute search for the project root
-current_path = Path(__file__).resolve()
-base_dir = None
-
-for parent in current_path.parents:
-    if (parent / 'manage.py').exists():
-        base_dir = parent
-        break
-
-if base_dir:
-    sys.path.append(str(base_dir))
-    os.chdir(str(base_dir)) 
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+# ... (keep your existing sys.path and os.environ logic here) ...
 
 from django.core.wsgi import get_wsgi_application
+from django.contrib.auth import get_user_model
+
 app = get_wsgi_application()
 
-# --- ADD THESE TWO LINES ---
-# This forces the database to create the 'vehicles_vehicle' table
+# --- AUTO-CREATE SUPERUSER FROM VERCEL ENV VARS ---
+def create_superuser():
+    User = get_user_model()
+    username = os.environ.get('DJANGO_SUPERUSER_USERNAME')
+    email = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@example.com')
+    password = os.environ.get('DJANGO_SUPERUSER_PASSWORD')
+
+    if username and password:
+        if not User.objects.filter(username=username).exists():
+            print(f"Creating superuser {username}...")
+            User.objects.create_superuser(username=username, email=email, password=password)
+        else:
+            print(f"Superuser {username} already exists.")
+
+# Run the check
 try:
-    call_command('migrate', interactive=False)
+    create_superuser()
 except Exception as e:
-    print(f"Migration failed: {e}")
-# ---------------------------
+    print(f"Superuser creation failed: {e}")
