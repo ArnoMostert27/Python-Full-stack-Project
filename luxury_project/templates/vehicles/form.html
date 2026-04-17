@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block title %}{{ action }} Vehicle{% endblock %}
+
+{% block content %}
+<div class="container my-5" style="max-width: 600px;">
+    <h2 class="premium-title text-center mb-4">{{ action }} Vehicle</h2>
+
+    <div class="form-card p-5 shadow-lg">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <label class="form-label premium-label">Brand</label>
+                {{ form.brand }}
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label premium-label">Model Name</label>
+                {{ form.name }}
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label premium-label">Price</label>
+                {{ form.price }}
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label premium-label">Image</label>
+                {{ form.image }}
+            </div>
+
+            <div class="d-flex justify-content-between mt-5">
+                <button type="submit" class="btn btn-submit w-50">{{ action }}</button>
+                <a href="{% url 'vehicles' %}" class="btn btn-cancel w-50 ms-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.form-card {
+    background: linear-gradient(145deg, rgba(12,12,25,0.85), rgba(20,20,50,0.85));
+    border-radius: 25px;
+    padding: 2rem;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.form-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 18px 50px rgba(212, 175, 55, 0.7);
+}
+.premium-label {
+    font-family: 'Playfair Display', serif;
+    color: #D4AF37;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+input.form-control, input[type="number"], input[type="file"] {
+    font-family: 'Montserrat', sans-serif;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid #D4AF37;
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    color: #E5E5E5;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+input.form-control:focus, input[type="number"]:focus, input[type="file"]:focus {
+    border-color: #F5E1A4;
+    background: rgba(212,175,55,0.08);
+    color: #F5E1A4;
+    box-shadow: 0 0 12px rgba(212,175,55,0.5);
+    outline: none;
+}
+.btn-submit {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #D4AF37, #F5E1A4);
+    color: #1C1C1C;
+    border: none;
+    border-radius: 12px;
+    padding: 0.7rem 2rem;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+.btn-submit::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: rgba(255,255,255,0.3);
+    transform: skewX(-25deg);
+    transition: all 0.5s ease;
+}
+.btn-submit:hover::after { left: 125%; }
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(212,175,55,0.5); }
+.btn-cancel {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.05);
+    color: #D4AF37;
+    border: 1px solid #D4AF37;
+    border-radius: 12px;
+    padding: 0.6rem 1.8rem;
+    transition: all 0.3s ease;
+}
+.btn-cancel:hover { background: #D4AF37; color: #1C1C1C; transform: translateY(-1px); }
+</style>
+{% endblock %}

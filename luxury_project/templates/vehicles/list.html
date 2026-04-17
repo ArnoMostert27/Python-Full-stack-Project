@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}Your Vehicles{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4 premium-title">Your Vehicles</h2>
+    <div class="text-center mb-4">
+        <a href="{% url 'create_vehicle' %}" class="btn btn-submit">Add Vehicle</a>
+    </div>
+
+    <div class="row g-4">
+        {% for v in vehicles %}
+        <div class="col-md-4">
+            <div class="card vehicle-card shadow-lg overflow-hidden">
+                {% if v.image %}
+                <img src="{{ v.image.url }}" class="card-img-top" style="height:200px; object-fit:cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ v.brand }} {{ v.name }}</h5>
+                    <p class="card-text">Price: ${{ v.price }}</p>
+                    <a href="{% url 'edit_vehicle' v.id %}" class="btn btn-edit me-2">Edit</a>
+                    <form action="{% url 'delete_vehicle' v.id %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-delete">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">No vehicles added yet.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.vehicle-card {
+    border-radius: 25px;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(12,12,25,0.85), rgba(20,20,50,0.85));
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.vehicle-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 15px 40px rgba(212,175,55,0.7);
+}
+.card-body h5 {
+    font-family: 'Playfair Display', serif;
+    color: #D4AF37;
+}
+.card-body p {
+    color: #E5E5E5;
+    font-weight: 500;
+}
+.btn-submit {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #D4AF37, #F5E1A4);
+    color: #1C1C1C;
+    border: none;
+    border-radius: 12px;
+    padding: 0.7rem 2rem;
+    transition: all 0.4s ease;
+}
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(212,175,55,0.5);
+}
+.btn-edit {
+    font-weight: 600;
+    color: #1C1C1C;
+    background: #F5E1A4;
+    border-radius: 10px;
+    padding: 0.4rem 1rem;
+    border: none;
+}
+.btn-edit:hover {
+    background: #D4AF37;
+}
+.btn-delete {
+    font-weight: 600;
+    color: #FFF;
+    background: #C0392B;
+    border-radius: 10px;
+    padding: 0.4rem 1rem;
+    border: none;
+}
+.btn-delete:hover {
+    background: #E74C3C;
+}
+</style>
+{% endblock %}
