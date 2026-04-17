@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import dj_database_url  # Essential for linking external databases
 
 # Points to 'luxury_project' folder
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -50,11 +51,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# DATABASE CONFIGURATION
+# This uses dj_database_url to pull the connection string from Vercel's Environment Variables.
+# If no variable is found, it falls back to your local db.sqlite3.
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 # Static Files
